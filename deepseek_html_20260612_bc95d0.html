@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>RIDEALONG — Find Your Van, Anywhere</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+    <a href="#" class="syne text-xl font-black text-white tracking-tight">RIDE<span style="color:var(--orange)">ALONG</span></a>
+    <div class="hidden md:flex items-center gap-5 text-sm text-gray-300">
+      <a href="#how" class="hover:text-white transition"><span class="lang-es">Cómo funciona</span><span class="lang-en">How it works</span></a>
+      <a href="#explore" class="hover:text-white transition"><span class="lang-es">Explorar</span><span class="lang-en">Explore</span></a>
+      <a href="#hosts" class="hover:text-white transition"><span class="lang-es">Soy Vanlifer</span><span class="lang-en">I'm a Vanlifer</span></a>
+      <a href="#pricing" class="hover:text-white transition"><span class="lang-es">Precios</span><span class="lang-en">Pricing</span></a>
+      <a href="#advertise" class="hover:text-white transition"><span class="lang-es">Publicidad</span><span class="lang-en">Advertise</span></a>
+      <a href="#support" class="hover:text-white transition"><span class="lang-es">Soporte</span><span class="lang-en">Support</span></a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="toggleLang()" class="flex items-center justify-center text-xs font-semibold text-gray-400 hover:text-white transition border border-gray-700 rounded-full w-9 h-9" id="langBtn">EN</button>
+      <button onclick="openModal('login')" class="text-sm text-gray-300 hover:text-white transition hidden sm:block"><span class="lang-es">Entrar</span><span class="lang-en">Log in</span></button>
+      <button onclick="openModal('signup')" class="btn-primary text-sm py-2 px-3 hidden sm:inline-flex"><span class="lang-es">Registrarme</span><span class="lang-en">Sign up</span></button>
+      <button onclick="toggleMobileMenu()" class="md:hidden flex flex-col gap-1.5 p-2" id="hamburger">
+        <span class="block w-6 h-0.5 bg-white transition-all" id="hb1"></span>
+        <span class="block w-6 h-0.5 bg-white transition-all" id="hb2"></span>
+        <span class="block w-6 h-0.5 bg-white transition-all" id="hb3"></span>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden bg-black/95 border-t border-white/10 px-4 py-4 flex flex-col gap-3 text-sm text-gray-300">
+    <a href="#how" onclick="closeMobileMenu()" class="py-2 border-b border-white/5"><span class="lang-es">Cómo funciona</span><span class="lang-en">How it works</span></a>
+    <a href="#explore" onclick="closeMobileMenu()" class="py-2 border-b border-white/5"><span class="lang-es">Explorar vans</span><span class="lang-en">Explore vans</span></a>
+    <a href="#hosts" onclick="closeMobileMenu()" class="py-2 border-b border-white/5"><span class="lang-es">Soy Vanlifer</span><span class="lang-en">I'm a Vanlifer</span></a>
+    <a href="#pricing" onclick="closeMobileMenu()" class="py-2 border-b border-white/5"><span class="lang-es">Precios</span><span class="lang-en">Pricing</span></a>
+    <a href="#advertise" onclick="closeMobileMenu()" class="py-2 border-b border-white/5"><span class="lang-es">Publicidad</span><span class="lang-en">Advertise</span></a>
+    <a href="#support" onclick="closeMobileMenu()" class="py-2 border-b border-white/5"><span class="lang-es">Soporte</span><span class="lang-en">Support</span></a>
+    <div class="flex gap-2 pt-2">
+      <button onclick="openModal('login'); closeMobileMenu();" class="flex-1 py-2 rounded-xl border border-white/20 text-white text-sm"><span class="lang-es">Entrar</span><span class="lang-en">Log in</span></button>
+      <button onclick="openModal('signup'); closeMobileMenu();" class="flex-1 py-2 rounded-xl font-bold text-sm text-white" style="background:var(--orange)"><span class="lang-es">Registrarme</span><span class="lang-en">Sign up</span></button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero pt-16">
+  <div class="hero-bg"></div>
+  <div class="hero-gradient"></div>
+  <div class="relative z-10 max-w-7xl mx-auto px-4 py-16 sm:py-24">
+    <div class="max-w-3xl">
+      <div class="badge mb-5" style="background:rgba(240,90,40,0.2); color:#F08060; border: 1px solid rgba(240,90,40,0.3);">
+        🌍 <span class="lang-es">+2,400 vans en 38 países</span><span class="lang-en">+2,400 vans in 38 countries</span>
+      </div>
+      <h1 class="syne font-black text-white mb-5">
+        <span class="lang-es-block">Encontrá la van perfecta, <span style="color:var(--amber)">en cualquier lugar del mundo</span></span>
+        <span class="lang-en-block">Find the perfect van, <span style="color:var(--amber)">anywhere in the world</span></span>
+      </h1>
+      <p class="text-gray-300 mb-8 max-w-xl leading-relaxed">
+        <span class="lang-es">Rankings reales, reviews de viajeros, match directo con vanlifers. Sin comisiones. Sin agencia.</span>
+        <span class="lang-en">Real rankings, traveler reviews, direct match with vanlifers. No commissions. No agencies.</span>
+      </p>
+      <div class="search-bar mb-6">
+        <span class="text-gray-400 hidden sm:inline">🔍</span>
+        <input type="text" id="heroSearch" placeholder="Destino, país, tipo de van..." />
+        <select id="countryFilter">
+          <option value=""><span class="lang-es">País</span><span class="lang-en">Country</span></option>
+          <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option><option value="mx">México 🇲🇽</option>
+          <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option><option value="br">Brasil 🇧🇷</option>
+          <option value="us">USA 🇺🇸</option><option value="es">España 🇪🇸</option>
+          <option value="nz">New Zealand 🇳🇿</option><option value="au">Australia 🇦🇺</option>
+        </select>
+        <button class="btn-primary" onclick="handleSearch()"><span class="lang-es">Buscar</span><span class="lang-en">Search</span></button>
+      </div>
+      <div class="scroll-x">
+        <div class="flex gap-2" style="min-width: max-content;">
+          <button class="pill active" onclick="togglePill(this)">🐾 Pet friendly</button>
+          <button class="pill" onclick="togglePill(this)"><span class="lang-es">🛡️ Con seguro</span><span class="lang-en">🛡️ Insured</span></button>
+          <button class="pill" onclick="togglePill(this)"><span class="lang-es">👩 Solo mujeres</span><span class="lang-en">👩 Women only</span></button>
+          <button class="pill" onclick="togglePill(this)"><span class="lang-es">🌊 Ruta costera</span><span class="lang-en">🌊 Coastal route</span></button>
+          <button class="pill" onclick="togglePill(this)"><span class="lang-es">⛺ Off-grid</span><span class="lang-en">⛺ Off-grid</span></button>
+          <button class="pill" onclick="togglePill(this)"><span class="lang-es">✅ Verificado</span><span class="lang-en">✅ Verified</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--dark);" class="py-12 px-4">
+  <div class="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+    <div><div class="stat-num text-white" id="stat-vans">...</div><p class="text-gray-400 text-sm mt-2"><span class="lang-es">Vans activas</span><span class="lang-en">Active vans</span></p></div>
+    <div><div class="stat-num" style="color:var(--orange)" id="stat-countries">...</div><p class="text-gray-400 text-sm mt-2"><span class="lang-es">Países</span><span class="lang-en">Countries</span></p></div>
+    <div><div class="stat-num text-white" id="stat-travelers">...</div><p class="text-gray-400 text-sm mt-2"><span class="lang-es">Viajeros</span><span class="lang-en">Travelers</span></p></div>
+    <div><div class="stat-num" style="color:var(--amber)">$0</div><p class="text-gray-400 text-sm mt-2"><span class="lang-es">Comisión</span><span class="lang-en">Commission</span></p></div>
+  </div>
+</section>
+
+<section id="how" class="py-20 px-4" style="background:var(--sand);">
+  <div class="max-w-7xl mx-auto">
+    <div class="section-label text-center"><span class="lang-es">✨ Simple y directo</span><span class="lang-en">✨ Simple and direct</span></div>
+    <h2 class="syne text-3xl sm:text-5xl font-black text-center mb-14">
+      <span class="lang-es-block">¿Cómo funciona?</span>
+      <span class="lang-en-block">How does it work?</span>
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center p-6 bg-white rounded-3xl shadow-sm">
+        <div class="text-5xl mb-4">🔍</div>
+        <div class="syne text-4xl font-black mb-2" style="color:var(--orange)">01</div>
+        <h3 class="syne text-xl font-black mb-3"><span class="lang-es">Buscás tu van</span><span class="lang-en">Search your van</span></h3>
+        <p class="text-gray-500 text-sm leading-relaxed"><span class="lang-es">Filtrás por país, región, características y presupuesto. Rankings reales basados en reviews verificadas.</span><span class="lang-en">Filter by country, region, features and budget. Real rankings based on verified reviews.</span></p>
+      </div>
+      <div class="text-center p-6 rounded-3xl shadow-sm text-white" style="background:var(--dark);">
+        <div class="text-5xl mb-4">💬</div>
+        <div class="syne text-4xl font-black mb-2" style="color:var(--amber)">02</div>
+        <h3 class="syne text-xl font-black mb-3"><span class="lang-es">Contactás directo</span><span class="lang-en">Contact directly</span></h3>
+        <p class="text-gray-400 text-sm leading-relaxed"><span class="lang-es">Sin intermediarios. Con Traveler Plus accedés al WhatsApp del host y acordás el viaje directamente.</span><span class="lang-en">No middlemen. With Traveler Plus you get the host's WhatsApp and arrange the trip directly.</span></p>
+      </div>
+      <div class="text-center p-6 bg-white rounded-3xl shadow-sm">
+        <div class="text-5xl mb-4">🚐</div>
+        <div class="syne text-4xl font-black mb-2" style="color:var(--green)">03</div>
+        <h3 class="syne text-xl font-black mb-3"><span class="lang-es">¡Viajás!</span><span class="lang-en">You travel!</span></h3>
+        <p class="text-gray-500 text-sm leading-relaxed"><span class="lang-es">El host nunca paga comisión. El precio que ves es lo que pagás. Sin sorpresas, sin agencias.</span><span class="lang-en">The host never pays commission. The price you see is what you pay. No surprises, no agencies.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="explore" class="py-16 px-4 max-w-7xl mx-auto">
+  <div class="section-label"><span class="lang-es">🏆 Rankings semanales</span><span class="lang-en">🏆 Weekly rankings</span></div>
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+    <h2 class="syne text-3xl sm:text-4xl md:text-5xl font-black"><span class="lang-es-block">Top vans esta semana</span><span class="lang-en-block">Top vans this week</span></h2>
+    <a href="#" class="btn-outline self-start"><span class="lang-es">Ver todos</span><span class="lang-en">See all</span> →</a>
+  </div>
+  <div class="scroll-x mb-6">
+    <div class="flex gap-2" style="min-width: max-content;">
+      <button class="pill active" onclick="switchTab(this, 'patagonia')">🏔️ Patagonia</button>
+      <button class="pill" onclick="switchTab(this, 'norte')">🌵 <span class="lang-es">Norte Arg.</span><span class="lang-en">North Arg.</span></button>
+      <button class="pill" onclick="switchTab(this, 'chile')">🌊 Chile</button>
+      <button class="pill" onclick="switchTab(this, 'mexico')">🌮 México</button>
+      <button class="pill" onclick="switchTab(this, 'newzealand')">🥝 New Zealand</button>
+      <button class="pill" onclick="switchTab(this, 'europe')">🏛️ <span class="lang-es">Europa</span><span class="lang-en">Europe</span></button>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="vanGrid"></div>
+  <div class="text-center mt-8"><button class="btn-outline py-3 px-6" onclick="loadMore()"><span class="lang-es">Cargar más vans</span><span class="lang-en">Load more</span></button></div>
+</section>
+
+<section class="py-16 px-4" style="background:var(--dark);">
+  <div class="max-w-7xl mx-auto">
+    <div class="section-label" style="color:var(--amber)"><span class="lang-es">🌍 Cobertura global</span><span class="lang-en">🌍 Global coverage</span></div>
+    <h2 class="syne text-3xl sm:text-4xl md:text-5xl font-black text-white mb-3"><span class="lang-es-block">Vans en todos los continentes</span><span class="lang-en-block">Vans on every continent</span></h2>
+    <p class="text-gray-400 mb-8 text-base"><span class="lang-es">Argentina · Chile · México · Colombia · Perú · Brasil · España · Nueva Zelanda · Australia · USA · y más</span><span class="lang-en">Argentina · Chile · Mexico · Colombia · Peru · Brazil · Spain · New Zealand · Australia · USA · and more</span></p>
+    <div class="world-map-placeholder"><div class="text-center text-gray-400"><div class="text-5xl mb-3">🗺️</div><p class="text-sm"><span class="lang-es">Mapa interactivo — conectar a Mapbox</span><span class="lang-en">Interactive map — connect to Mapbox</span></p><p class="text-xs text-gray-600 mt-1">data-component="world-map"</p></div>
+      <div style="position:absolute;top:45%;left:28%;width:10px;height:10px;background:var(--orange);border-radius:50%;box-shadow:0 0 12px var(--orange);animation:pulse 2s infinite;"></div>
+      <div style="position:absolute;top:55%;left:25%;width:8px;height:8px;background:var(--amber);border-radius:50%;box-shadow:0 0 10px var(--amber);animation:pulse 2.3s infinite;"></div>
+      <div style="position:absolute;top:40%;left:48%;width:8px;height:8px;background:var(--orange);border-radius:50%;box-shadow:0 0 10px var(--orange);animation:pulse 1.8s infinite;"></div>
+      <div style="position:absolute;top:35%;left:75%;width:10px;height:10px;background:var(--amber);border-radius:50%;box-shadow:0 0 12px var(--amber);animation:pulse 2.5s infinite;"></div>
+      <div style="position:absolute;top:62%;left:82%;width:8px;height:8px;background:var(--orange);border-radius:50%;animation:pulse 2s infinite;"></div>
+      <div style="position:absolute;top:30%;left:20%;width:7px;height:7px;background:var(--amber);border-radius:50%;animation:pulse 2.8s infinite;"></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" class="py-16 px-4" style="background:var(--sand);">
+  <div class="max-w-7xl mx-auto">
+    <div class="section-label text-center"><span class="lang-es">💰 Planes para viajeros</span><span class="lang-en">💰 Travel plans</span></div>
+    <h2 class="syne text-3xl sm:text-4xl md:text-5xl font-black text-center mb-3"><span class="lang-es-block">Elegí cómo viajar</span><span class="lang-en-block">Choose how to travel</span></h2>
+    <p class="text-center text-gray-500 mb-10"><span class="lang-es">Siempre gratis para empezar. Pagás si querés más.</span><span class="lang-en">Always free to start. Pay only if you want more.</span></p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+      <div class="plan-card"><div class="text-3xl mb-3">🆓</div><h3 class="syne text-2xl font-black mb-1">Free</h3><p class="text-gray-400 text-sm mb-4"><span class="lang-es">Explorar sin compromisos</span><span class="lang-en">Explore free</span></p><div class="text-4xl font-black mb-5">$0<span class="text-base text-gray-400">/<span class="lang-es">mes</span><span class="lang-en">mo</span></span></div><ul class="space-y-2 mb-6 text-sm"><li>✓ <span class="lang-es">Rankings completos</span><span class="lang-en">Full rankings</span></li><li>✓ <span class="lang-es">Ver 3 hosts/día</span><span class="lang-en">See 3 hosts/day</span></li></ul><button onclick="openModal('signup')" class="w-full py-3 rounded-full border border-gray-300 font-semibold"><span class="lang-es">Empezar gratis</span><span class="lang-en">Start free</span></button></div>
+      <div class="plan-card plan-popular relative"><div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-xs px-4 py-1.5 rounded-full font-bold">⭐ <span class="lang-es">MÁS ELEGIDO</span><span class="lang-en">POPULAR</span></div><div class="text-3xl mb-3">🚐</div><h3 class="syne text-2xl font-black text-white mb-1">Traveler Plus</h3><p class="text-gray-400 text-sm mb-4"><span class="lang-es">Viajeros frecuentes</span><span class="lang-en">Frequent travelers</span></p><div class="text-4xl font-black mb-5 text-white">$9<span class="text-base text-gray-400">/<span class="lang-es">mes</span><span class="lang-en">mo</span></span></div><ul class="space-y-2 mb-6 text-sm text-gray-300"><li>✓ <span class="lang-es">Sin publicidad</span><span class="lang-en">No ads</span></li><li>✓ <span class="lang-es">WhatsApp directo</span><span class="lang-en">Direct WhatsApp</span></li><li>✓ <span class="lang-es">Filtros avanzados</span><span class="lang-en">Advanced filters</span></li></ul><button onclick="openPayment('traveler_plus')" class="w-full py-3 rounded-full font-bold text-white shadow-lg" style="background:var(--orange)"><span class="lang-es">Suscribirme por $9</span><span class="lang-en">Subscribe $9</span></button></div>
+      <div class="plan-card"><div class="text-3xl mb-3">🛡️</div><h3 class="syne text-2xl font-black mb-1" style="color:var(--green)">Trust Pass</h3><p class="text-gray-400 text-sm mb-4"><span class="lang-es">Tranquilidad por viaje</span><span class="lang-en">Peace per trip</span></p><div class="text-4xl font-black mb-5" style="color:var(--green)">$15<span class="text-base text-gray-400">/<span class="lang-es">match</span><span class="lang-en">match</span></span></div><ul class="space-y-2 mb-6 text-sm"><li>✓ <span class="lang-es">Video-call grabada</span><span class="lang-en">Recorded video-call</span></li><li>✓ <span class="lang-es">Botón pánico GPS</span><span class="lang-en">GPS panic button</span></li><li>✓ $50 <span class="lang-es">crédito si cancela</span><span class="lang-en">credit if canceled</span></li></ul><button onclick="openPayment('trust_pass')" class="w-full py-3 rounded-full font-bold text-white shadow-md" style="background:var(--green)"><span class="lang-es">Activar por $15</span><span class="lang-en">Activate $15</span></button></div>
+    </div>
+    <div class="mt-10 max-w-5xl mx-auto">
+      <div class="section-label text-center mt-2">🚐 <span class="lang-es">Para vanlifers</span><span class="lang-en">For vanlifers</span></div>
+      <div class="plan-card relative mt-4" style="border:2px solid var(--orange); background: linear-gradient(135deg, #fff 80%, #FFF3EE 100%);">
+        <div class="absolute -top-3 left-6 bg-orange-500 text-white text-xs px-4 py-1.5 rounded-full font-bold">🏆 HOST PRO</div>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-4">
+          <div class="flex-1">
+            <h3 class="syne text-2xl font-black mb-1"><span class="lang-es">Publicá tu van, conseguí clientes</span><span class="lang-en">List your van, get clients</span></h3>
+            <p class="text-gray-500 text-sm mb-4"><span class="lang-es">Sin comisión. Aparecés primero en tu zona.</span><span class="lang-en">No commission. Show up first in your area.</span></p>
+            <div class="flex flex-wrap gap-3 text-sm">
+              <span>✓ <span class="lang-es">Perfil verificado + badge</span><span class="lang-en">Verified profile + badge</span></span>
+              <span>✓ <span class="lang-es">Primero en rankings</span><span class="lang-en">First in rankings</span></span>
+              <span>✓ <span class="lang-es">Fotos ilimitadas</span><span class="lang-en">Unlimited photos</span></span>
+              <span>✓ Analytics</span>
+              <span>✓ <span class="lang-es">Calendario disponibilidad</span><span class="lang-en">Availability calendar</span></span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center gap-3 md:min-w-[180px]">
+            <div>
+              <div class="text-xs text-gray-400 text-center mb-1"><span class="lang-es">Perfil gratis o</span><span class="lang-en">Free profile or</span></div>
+              <div class="text-4xl font-black text-center" style="color:var(--orange)">$20<span class="text-base font-normal text-gray-400">/<span class="lang-es">mes</span><span class="lang-en">mo</span></span></div>
+            </div>
+            <button onclick="openPayment('host_pro')" class="btn-primary w-full justify-center" style="background:var(--orange)">
+              <span class="lang-es">Publicar mi van</span><span class="lang-en">List my van</span>
+            </button>
+            <p class="text-xs text-gray-400 text-center"><span class="lang-es">Gratis los primeros 30 días</span><span class="lang-en">Free for 30 days</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hosts" class="py-16 px-4" style="background:var(--dark);">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <div><div class="badge mb-4" style="background:rgba(26,138,90,0.2); color:#4ADE80;">🚐 <span class="lang-es">¿Tenés una van?</span><span class="lang-en">Got a van?</span></div><h2 class="syne text-3xl sm:text-4xl md:text-5xl font-black text-white mb-5"><span class="lang-es-block">Conseguí clientes <span style="color:var(--orange)">sin comisión</span></span><span class="lang-en-block">Get clients <span style="color:var(--orange)">commission-free</span></span></h2><ul class="space-y-3 mb-6"><li class="flex gap-2 text-gray-300"><span class="text-green-400 text-xl">✓</span><span><span class="lang-es">Perfil gratis en 2 minutos</span><span class="lang-en">Free profile in 2 min</span></span></li><li class="flex gap-2 text-gray-300"><span class="text-green-400 text-xl">✓</span><span><span class="lang-es">Sin comisión, recibí consultas directas</span><span class="lang-en">No commission, direct inquiries</span></span></li></ul><div class="flex flex-wrap gap-3"><button onclick="openModal('host-signup')" class="btn-primary" style="width:auto"><span class="lang-es">Crear perfil gratis</span><span class="lang-en">Create free profile</span></button><a href="#" class="btn-ghost" style="width:auto"><span class="lang-es">Host Pro →</span><span class="lang-en">Host Pro →</span></a></div></div>
+    <div><img src="https://res.cloudinary.com/ds2udm1nc/image/upload/v1781063007/img5_kiceeq.png" alt="Vanlifer" class="rounded-2xl shadow-2xl w-full"><div class="mt-4 grid grid-cols-3 gap-3"><div class="rounded-xl p-4 text-center bg-white/5"><p class="text-2xl font-black text-white">15</p><p class="text-xs text-gray-400"><span class="lang-es">Consultas/mes</span><span class="lang-en">Inquiries/mo</span></p></div><div class="rounded-xl p-4 text-center bg-orange-500/20"><p class="text-2xl font-black" style="color:var(--orange)">$0</p><p class="text-xs text-gray-400"><span class="lang-es">Comisión</span><span class="lang-en">Commission</span></p></div><div class="rounded-xl p-4 text-center bg-white/5"><p class="text-2xl font-black text-white">#1</p><p class="text-xs text-gray-400"><span class="lang-es">En tu zona</span><span class="lang-en">In your area</span></p></div></div></div>
+  </div>
+</section>
+
+<section class="py-16 px-4" style="background:var(--sand);">
+  <div class="max-w-3xl mx-auto text-center">
+    <img src="https://res.cloudinary.com/ds2udm1nc/image/upload/v1781063009/img8_uh6slq.png" alt="Meli R." class="testimonial-img" style="width:80px;height:80px;border-radius:999px;object-fit:cover;margin:0 auto;border:4px solid var(--orange);">
+    <blockquote class="syne text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 my-5 leading-tight"><span class="lang-es">"15 consultas el primer mes sin pagar publicidad. El badge Pro me puso primera en Bariloche."</span><span class="lang-en">"15 inquiries in the first month without paying for ads. The Pro badge put me first in Bariloche."</span></blockquote>
+    <p class="font-bold">Meli R.</p><p class="text-sm" style="color:var(--orange)">Host Pro · Bariloche, Argentina 🇦🇷</p>
+  </div>
+</section>
+
+<section class="py-16 px-4" style="background:var(--dark);">
+  <div class="max-w-3xl mx-auto text-center"><div class="section-label" style="color:var(--amber)">🔥 <span class="lang-es">Tendencias</span><span class="lang-en">Trends</span></div><h2 class="syne text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4"><span class="lang-es-block">No te pierdas nada</span><span class="lang-en-block">Don't miss a thing</span></h2><p class="text-gray-400 mb-8"><span class="lang-es">Nuevas vans, alertas semanales</span><span class="lang-en">New vans, weekly alerts</span></p><div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"><input type="email" id="newsletterEmail" class="form-input flex-1 rounded-full" placeholder="tu@email.com"><button onclick="subscribeNewsletter()" class="btn-primary rounded-full px-6" style="width:auto"><span class="lang-es">Recibir alertas</span><span class="lang-en">Get alerts</span></button></div></div>
+</section>
+
+<section id="advertise" class="py-20 px-4" style="background:var(--dark);">
+  <div class="max-w-5xl mx-auto">
+    <div class="section-label" style="color:var(--amber)">📣 <span class="lang-es">Partners & Publicidad</span><span class="lang-en">Partners & Advertising</span></div>
+    <h2 class="syne text-3xl sm:text-5xl font-black text-white mb-4">
+      <span class="lang-es-block">¿Tu marca viaja con nosotros?</span>
+      <span class="lang-en-block">Does your brand travel with us?</span>
+    </h2>
+    <p class="text-gray-400 text-lg mb-4">
+      <span class="lang-es">RIDEALONG conecta viajeros apasionados con la cultura vanlife en todo el mundo — desde América hasta Europa, Oceanía y más. Si tu marca se alinea con el espíritu de la aventura, este es tu espacio.</span>
+      <span class="lang-en">RIDEALONG connects passionate travelers with vanlife culture worldwide — from the Americas to Europe, Oceania and beyond. If your brand aligns with the spirit of adventure, this is your space.</span>
+    </p>
+    <p class="text-gray-500 text-sm mb-10">
+      🌍 <span class="lang-es">Audiencia global activa desde cualquier país del mundo.</span>
+      <span class="lang-en">Global active audience from any country in the world.</span>
+    </p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-12">
+      <div class="rounded-2xl p-4 text-center" style="background:rgba(255,255,255,0.05);">🛡️ <span class="text-gray-300 text-sm"><span class="lang-es">Seguros de viaje</span><span class="lang-en">Travel insurance</span></span></div>
+      <div class="rounded-2xl p-4 text-center" style="background:rgba(255,255,255,0.05);">⛺ <span class="text-gray-300 text-sm"><span class="lang-es">Equipamiento outdoor</span><span class="lang-en">Outdoor gear</span></span></div>
+      <div class="rounded-2xl p-4 text-center" style="background:rgba(255,255,255,0.05);">🗺️ <span class="text-gray-300 text-sm"><span class="lang-es">Apps de navegación</span><span class="lang-en">Navigation apps</span></span></div>
+      <div class="rounded-2xl p-4 text-center" style="background:rgba(255,255,255,0.05);">🚲 <span class="text-gray-300 text-sm"><span class="lang-es">Alquiler de equipos</span><span class="lang-en">Equipment rental</span></span></div>
+      <div class="rounded-2xl p-4 text-center" style="background:rgba(255,255,255,0.05);">🏕️ <span class="text-gray-300 text-sm"><span class="lang-es">Hostels & glamping</span><span class="lang-en">Hostels & glamping</span></span></div>
+      <div class="rounded-2xl p-4 text-center" style="background:rgba(255,255,255,0.05);">🔧 <span class="text-gray-300 text-sm"><span class="lang-es">Van conversión</span><span class="lang-en">Van conversion</span></span></div>
+      <div class="rounded-2xl p-4 text-center" style="background:rgba(255,255,255,0.05);">👟 <span class="text-gray-300 text-sm"><span class="lang-es">Ropa outdoor</span><span class="lang-en">Outdoor clothing</span></span></div>
+      <div class="rounded-2xl p-4 text-center" style="background:rgba(255,255,255,0.05);">📷 <span class="text-gray-300 text-sm"><span class="lang-es">Fotografía & tech</span><span class="lang-en">Photography & tech</span></span></div>
+      <div class="rounded-2xl p-4 text-center" style="background:rgba(240,90,40,0.15); border:1px dashed rgba(240,90,40,0.4);">✨ <span class="text-orange-400 text-sm font-semibold"><span class="lang-es">Tu marca aquí</span><span class="lang-en">Your brand here</span></span></div>
+    </div>
+    <div class="bg-white/5 rounded-3xl p-8 max-w-2xl mx-auto border border-white/10">
+      <h3 class="syne text-2xl font-black text-white mb-2 text-center">
+        <span class="lang-es">Quiero ser partner 🤝</span><span class="lang-en">I want to partner 🤝</span>
+      </h3>
+      <p class="text-gray-400 text-sm text-center mb-6">
+        <span class="lang-es">Contanos sobre tu marca y te contactamos con los planes disponibles.</span>
+        <span class="lang-en">Tell us about your brand and we'll reach out with available plans.</span>
+      </p>
+      <div class="space-y-3">
+        <input type="text" id="adv-name" class="form-input" placeholder="Nombre / Name">
+        <input type="text" id="adv-brand" class="form-input" placeholder="Empresa / Brand">
+        <input type="email" id="adv-email" class="form-input" placeholder="Email">
+        <select id="adv-country" class="form-input">
+          <option value=""><span class="lang-es">País</span><span class="lang-en">Country</span></option>
+          <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option><option value="mx">México 🇲🇽</option>
+          <option value="co">Colombia 🇨🇴</option><option value="br">Brasil 🇧🇷</option><option value="us">USA 🇺🇸</option>
+          <option value="es">España 🇪🇸</option><option value="nz">New Zealand 🇳🇿</option><option value="au">Australia 🇦🇺</option>
+          <option value="other">Otro / Other 🌍</option>
+        </select>
+        <select id="adv-category" class="form-input">
+          <option value=""><span class="lang-es">Rubro</span><span class="lang-en">Category</span></option>
+          <option value="seguros"><span class="lang-es">Seguros de viaje</span><span class="lang-en">Travel insurance</span></option>
+          <option value="outdoor"><span class="lang-es">Equipamiento outdoor</span><span class="lang-en">Outdoor gear</span></option>
+          <option value="tech">Tech / Apps</option>
+          <option value="alojamiento"><span class="lang-es">Alojamiento</span><span class="lang-en">Accommodation</span></option>
+          <option value="van"><span class="lang-es">Van / Autos</span><span class="lang-en">Van / Cars</span></option>
+          <option value="otro"><span class="lang-es">Otro</span><span class="lang-en">Other</span></option>
+        </select>
+        <textarea id="adv-message" class="form-input" rows="3" placeholder="Mensaje / Message (opcional)"></textarea>
+        <button onclick="handleAdvertiseForm()" class="btn-primary w-full py-3 justify-center" style="width:100%">
+          <span class="lang-es">Enviar consulta</span><span class="lang-en">Send inquiry</span>
+        </button>
+      </div>
+      <p class="text-center text-xs text-gray-600 mt-3">
+        <span class="lang-es">También podés escribirnos directo a</span><span class="lang-en">Or reach us directly at</span>
+        <a href="mailto:ridealong61@yahoo.com" class="text-orange-400 ml-1">ridealong61@yahoo.com</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="support" class="py-20 px-4" style="background:var(--sand);">
+  <div class="max-w-4xl mx-auto">
+    <div class="section-label text-center">💬 <span class="lang-es">Ayuda</span><span class="lang-en">Help</span></div>
+    <h2 class="syne text-3xl sm:text-5xl font-black text-center mb-12">
+      <span class="lang-es-block">Soporte</span><span class="lang-en-block">Support</span>
+    </h2>
+    <div class="space-y-4 mb-12">
+      <details class="bg-white rounded-2xl p-5 cursor-pointer group">
+        <summary class="font-bold flex justify-between items-center">
+          <span class="lang-es">¿RIDEALONG opera los viajes?</span><span class="lang-en">Does RIDEALONG operate trips?</span>
+          <span class="text-orange-500 text-xl">+</span>
+        </summary>
+        <p class="text-gray-500 text-sm mt-3 leading-relaxed"><span class="lang-es">No. Somos una red informativa. Los hosts son independientes y operan sus propias vans. El acuerdo es directo entre viajero y host.</span><span class="lang-en">No. We're an informational network. Hosts are independent and operate their own vans. The agreement is directly between traveler and host.</span></p>
+      </details>
+      <details class="bg-white rounded-2xl p-5 cursor-pointer">
+        <summary class="font-bold flex justify-between items-center">
+          <span class="lang-es">¿En qué países está disponible?</span><span class="lang-en">Which countries is it available in?</span>
+          <span class="text-orange-500 text-xl">+</span>
+        </summary>
+        <p class="text-gray-500 text-sm mt-3 leading-relaxed"><span class="lang-es">En todo el mundo. Cualquier vanlifer de cualquier país puede publicar su van gratis.</span><span class="lang-en">Worldwide. Any vanlifer from any country can list their van for free.</span></p>
+      </details>
+      <details class="bg-white rounded-2xl p-5 cursor-pointer">
+        <summary class="font-bold flex justify-between items-center">
+          <span class="lang-es">¿Cómo cancelo mi suscripción?</span><span class="lang-en">How do I cancel my subscription?</span>
+          <span class="text-orange-500 text-xl">+</span>
+        </summary>
+        <p class="text-gray-500 text-sm mt-3 leading-relaxed"><span class="lang-es">Escribinos a ridealong61@yahoo.com con tu email y procesamos la cancelación en 24hs.</span><span class="lang-en">Email us at ridealong61@yahoo.com with your email and we'll process the cancellation within 24hs.</span></p>
+      </details>
+      <details class="bg-white rounded-2xl p-5 cursor-pointer">
+        <summary class="font-bold flex justify-between items-center">
+          <span class="lang-es">¿Cómo reporto un host?</span><span class="lang-en">How do I report a host?</span>
+          <span class="text-orange-500 text-xl">+</span>
+        </summary>
+        <p class="text-gray-500 text-sm mt-3 leading-relaxed"><span class="lang-es">Escribinos a ridealong61@yahoo.com con el nombre del perfil y el motivo. Revisamos en menos de 48hs.</span><span class="lang-en">Email ridealong61@yahoo.com with the profile name and reason. We review within 48hs.</span></p>
+      </details>
+    </div>
+    <div class="text-center bg-white rounded-3xl p-8 shadow-sm">
+      <div class="text-4xl mb-3">📬</div>
+      <h3 class="syne text-2xl font-black mb-2"><span class="lang-es">¿Necesitás ayuda?</span><span class="lang-en">Need help?</span></h3>
+      <p class="text-gray-500 mb-5"><span class="lang-es">Respondemos todos los mensajes en menos de 24hs.</span><span class="lang-en">We respond to all messages within 24hs.</span></p>
+      <a href="mailto:ridealong61@yahoo.com" class="btn-primary justify-center" style="display:inline-flex; width:auto;">
+        ✉️ ridealong61@yahoo.com
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer style="background:#0A0A0A;" class="pt-12 pb-6 px-4"><div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+  <div><p class="syne text-xl font-black mb-2">RIDE<span style="color:var(--orange)">ALONG</span></p><p class="text-gray-500 text-xs mb-2">© 2026 · Global vanlife community</p><a href="mailto:ridealong61@yahoo.com" class="text-xs text-orange-400">ridealong61@yahoo.com</a></div>
+  <div><p class="font-bold mb-3 text-sm" style="color:var(--orange)"><span class="lang-es">Viajeros</span><span class="lang-en">Travelers</span></p><ul class="space-y-2 text-xs text-gray-500"><li><a href="#explore" class="hover:text-orange-400">Rankings</a></li><li><a href="#pricing" class="hover:text-orange-400">Traveler Plus</a></li><li><a href="#how" class="hover:text-orange-400"><span class="lang-es">Cómo funciona</span><span class="lang-en">How it works</span></a></li></ul></div>
+  <div><p class="font-bold mb-3 text-sm" style="color:var(--orange)">Hosts</p><ul class="space-y-2 text-xs text-gray-500"><li><a href="#hosts" class="hover:text-orange-400"><span class="lang-es">Publicar van</span><span class="lang-en">List van</span></a></li><li><a href="#pricing" class="hover:text-orange-400">Host Pro</a></li><li><a href="#advertise" class="hover:text-orange-400"><span class="lang-es">Publicidad</span><span class="lang-en">Advertise</span></a></li></ul></div>
+  <div><p class="font-bold mb-3 text-sm" style="color:var(--orange)"><span class="lang-es">Ayuda</span><span class="lang-en">Help</span></p><ul class="space-y-2 text-xs text-gray-500"><li><a href="#support" class="hover:text-orange-400">FAQ</a></li><li><a href="mailto:ridealong61@yahoo.com" class="hover:text-orange-400">Soporte / Support</a></li><li><a href="mailto:ridealong61@yahoo.com" class="hover:text-orange-400"><span class="lang-es">Reportar host</span><span class="lang-en">Report host</span></a></li></ul></div>
+</div><div class="border-t pt-6 text-center text-xs text-gray-600" style="border-color:#1e1e1e;">
+  <p class="mb-2">💳 <span class="lang-es">Pagos seguros vía</span><span class="lang-en">Secure payments via</span> PayPal · Lemon Cash</p>
+  <p>RIDEALONG <span class="lang-es">red informativa. Hosts independientes. No operamos tours ni verificamos vehículos.</span><span class="lang-en">informational network. Independent hosts. We do not operate tours or verify vehicles.</span></p>
+</div></footer>
+
+<div class="modal-overlay" id="modal-signup"><div class="modal"><button onclick="closeModal('signup')" class="absolute top-4 right-4 text-2xl">✕</button><h2 class="syne text-2xl font-black"><span class="lang-es">Crear cuenta gratis</span><span class="lang-en">Sign up free</span></h2><div class="space-y-4 mt-5"><input type="text" id="signup-name" class="form-input" placeholder="Nombre"><input type="email" id="signup-email" class="form-input" placeholder="Email"><input type="password" id="signup-pass" class="form-input" placeholder="Contraseña"><button onclick="handleSignup()" id="btn-signup" class="btn-primary w-full py-3"><span class="lang-es">Registrarme</span><span class="lang-en">Sign up</span></button></div><p class="text-center mt-4 text-sm"><span class="lang-es">¿Ya tenés cuenta?</span><span class="lang-en">Have an account?</span> <button onclick="switchModal('signup','login')" class="text-orange-600 font-bold">Entrar</button></p></div></div>
+<div class="modal-overlay" id="modal-login"><div class="modal"><button onclick="closeModal('login')" class="absolute top-4 right-4 text-2xl">✕</button><h2 class="syne text-2xl font-black"><span class="lang-es">Bienvenido</span><span class="lang-en">Welcome back</span></h2><div class="space-y-4 mt-5"><input type="email" id="login-email" class="form-input" placeholder="Email"><input type="password" id="login-pass" class="form-input" placeholder="Contraseña"><button onclick="handleLogin()" id="btn-login" class="btn-primary w-full py-3"><span class="lang-es">Entrar</span><span class="lang-en">Log in</span></button></div><p class="text-center mt-4 text-sm"><span class="lang-es">¿Sin cuenta?</span><span class="lang-en">No account?</span> <button onclick="switchModal('login','signup')" class="text-orange-600 font-bold">Registrarme</button></p></div></div>
+
+<div class="modal-overlay" id="modal-host-signup">
+  <div class="modal" style="max-width:520px; max-height:90vh; overflow-y:auto;">
+    <button onclick="closeModal('host-signup')" class="absolute top-4 right-4 text-2xl">✕</button>
+    <h2 class="syne text-2xl font-black">🚐 <span class="lang-es">Publicar mi van</span><span class="lang-en">List my van</span></h2>
+    <p class="text-gray-400 text-sm mt-1 mb-5"><span class="lang-es">Gratis · Sin comisión · 2 minutos</span><span class="lang-en">Free · No commission · 2 minutes</span></p>
+    <div class="space-y-3">
+      <input type="text" id="host-name" class="form-input" placeholder="Nombre de tu van / Van name *">
+      <input type="email" id="host-email" class="form-input" placeholder="Email *">
+      <select id="host-country" class="form-input">
+        <option value="">País / Country *</option>
+        <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option><option value="mx">México 🇲🇽</option>
+        <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option><option value="br">Brasil 🇧🇷</option>
+        <option value="uy">Uruguay 🇺🇾</option><option value="bo">Bolivia 🇧🇴</option><option value="us">USA 🇺🇸</option>
+        <option value="ca">Canada 🇨🇦</option><option value="es">España 🇪🇸</option><option value="pt">Portugal 🇵🇹</option>
+        <option value="nz">New Zealand 🇳🇿</option><option value="au">Australia 🇦🇺</option><option value="za">South Africa 🇿🇦</option>
+        <option value="other">Otro / Other 🌍</option>
+      </select>
+      <input type="text" id="host-city" class="form-input" placeholder="Ciudad / City">
+      <input type="tel" id="host-whatsapp" class="form-input" placeholder="WhatsApp (ej: +54 9 11...)">
+      <input type="number" id="host-price" class="form-input" placeholder="Precio por día en USD / Price per day USD">
+      <textarea id="host-desc" class="form-input" rows="3" placeholder="Descripción de tu van / Van description"></textarea>
+      <div>
+        <label class="block text-sm font-semibold text-gray-600 mb-2">📷 <span class="lang-es">Fotos de tu van</span><span class="lang-en">Van photos</span> <span class="text-xs font-normal text-gray-400">(max 5)</span></label>
+        <div id="photoPreview" class="flex flex-wrap gap-2 mb-2"></div>
+        <label class="block w-full py-3 px-4 border-2 border-dashed border-gray-300 rounded-xl text-center text-sm text-gray-400 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition">
+          <input type="file" id="host-photos" accept="image/*" multiple class="hidden" onchange="previewPhotos(this)">
+          <span class="lang-es">+ Subir fotos</span><span class="lang-en">+ Upload photos</span>
+        </label>
+      </div>
+      <button onclick="handleHostSignup()" id="btn-host-signup" class="btn-primary w-full py-3 justify-center" style="width:100%">
+        <span class="lang-es">Crear perfil gratis</span><span class="lang-en">Create free profile</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-van-detail"><div class="modal"><button onclick="closeModal('van-detail')" class="absolute top-4 right-4 text-2xl">✕</button><div id="vanDetailContent"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modal-paypal">
+  <div class="modal" style="max-width:420px;">
+    <button onclick="closeModal('paypal')" class="absolute top-4 right-4 text-2xl text-gray-400">✕</button>
+    <div id="paypalPlanInfo" class="mb-5"></div>
+    <div id="paypal-button-container"></div>
+    <div class="mt-4 text-center">
+      <p class="text-xs text-gray-400 mb-2">— <span class="lang-es">o pagá con</span><span class="lang-en">or pay with</span> —</p>
+      <button onclick="handleLemonCash()" class="w-full py-3 rounded-full font-bold text-sm border-2 border-yellow-400 text-yellow-600 hover:bg-yellow-50 transition">
+        🍋 Lemon Cash <span class="text-xs font-normal text-gray-400">(Argentina)</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AT7rIcbFTBG7EvjALkKj6wTtTQ2sTiLoG-FVr1AaA68iaYeeyXneXEkh5orCDPYic_csGfabXSAnLEQH&currency=USD"></script>
+<script src="scripts.js"></script>
+</body>
+</html>

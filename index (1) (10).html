@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>RIDEALONG — Find Your Van, Anywhere</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #F05A28;
+      --amber: #F5A623;
+      --dark: #0F0F0F;
+      --sand: #FAF6F1;
+      --green: #1A8A5A;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; width: 100%; max-width: 100vw; }
+    body { font-family: 'Inter', sans-serif; background: var(--sand); color: var(--dark); }
+    .syne { font-family: 'Syne', sans-serif; }
+    
+    .lang-en { display: none; }
+    .lang-es { display: inline; }
+    html[data-lang="en"] .lang-en { display: inline; }
+    html[data-lang="en"] .lang-es { display: none; }
+    html[data-lang="en"] .lang-en-block { display: block !important; }
+    html[data-lang="en"] .lang-es-block { display: none !important; }
+    .lang-en-block { display: none; }
+    .lang-es-block { display: block; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15,15,15,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0.75rem 0; }
+    
+    .hero { min-height: 100vh; background: var(--dark); position: relative; overflow: hidden; display: flex; align-items: center; padding: 80px 16px 40px; }
+    .hero-bg { position: absolute; inset: 0; background: url('https://res.cloudinary.com/ds2udm1nc/image/upload/v1781063007/img4_y0bjie.png') center/cover no-repeat; opacity: 0.35; }
+    .hero-gradient { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,15,15,0.85) 0%, rgba(240,90,40,0.15) 100%); }
+    
+    .van-card { background: white; border-radius: 20px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+    .van-card:active { transform: scale(0.98); }
+    @media (hover: hover) { .van-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); } }
+    
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    
+    .btn-primary { background: var(--orange); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; width: 100%; }
+    .btn-primary:active { transform: scale(0.96); }
+    @media (min-width: 640px) { .btn-primary { width: auto; padding: 14px 28px; font-size: 15px; } }
+    
+    .btn-ghost { background: transparent; color: white; padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; border: 1.5px solid rgba(255,255,255,0.3); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; width: 100%; }
+    @media (min-width: 640px) { .btn-ghost { width: auto; padding: 14px 28px; } }
+    
+    .btn-outline { background: transparent; color: var(--orange); padding: 10px 20px; border-radius: 40px; font-weight: 600; font-size: 13px; border: 1.5px solid var(--orange); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+    
+    .search-bar { background: white; border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 100%; }
+    .search-bar input { border: 1px solid #E0D9D0; outline: none; font-size: 15px; padding: 12px 16px; border-radius: 12px; background: white; }
+    .search-bar select { border: 1px solid #E0D9D0; outline: none; font-size: 14px; background: white; padding: 12px 16px; border-radius: 12px; }
+    @media (min-width: 640px) { 
+      .search-bar { flex-direction: row; align-items: center; padding: 6px 6px 6px 20px; max-width: 580px; } 
+      .search-bar input, .search-bar select { border: none; padding: 10px 8px; background: transparent; }
+      .search-bar .btn-primary { margin: 0; width: auto; }
+    }
+    
+    .plan-card { background: white; border-radius: 24px; padding: 24px 20px; border: 1px solid #E8E3DC; transition: all 0.2s; }
+    .plan-popular { background: var(--dark); color: white; border-color: var(--dark); }
+    
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; line-height: 1.1; }
+    @media (min-width: 640px) { .stat-num { font-size: 48px; } }
+    
+    .scroll-x { overflow-x: auto; scrollbar-width: thin; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+    .scroll-x::-webkit-scrollbar { height: 3px; background: #E5E0D8; border-radius: 10px; }
+    .scroll-x::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 10px; }
+    .pill { padding: 8px 18px; border-radius: 40px; border: 1px solid #E0D9D0; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; background: white; color: #3a3a3a; white-space: nowrap; flex-shrink: 0; }
+    .pill.active, .pill:active { background: var(--orange); border-color: var(--orange); color: white; }
+    
+    .stars { color: #F5A623; font-size: 14px; letter-spacing: 2px; }
+    
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(5px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: white; border-radius: 32px; max-width: 94%; width: 100%; max-height: 85vh; overflow-y: auto; padding: 28px 24px; position: relative; }
+    @media (min-width: 480px) { .modal { max-width: 460px; } }
+    
+    .form-input { width: 100%; padding: 14px 16px; border: 1.5px solid #EAE3DA; border-radius: 16px; font-size: 15px; outline: none; background: white; }
+    .form-input:focus { border-color: var(--orange); box-shadow: 0 0 0 2px rgba(240,90,40,0.2); }
+    
+    .toast { position: fixed; bottom: 20px; left: 16px; right: 16px; background: var(--dark); color: white; padding: 14px 20px; border-radius: 60px; font-size: 14px; font-weight: 500; z-index: 300; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; pointer-events: none; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    @media (min-width: 640px) { .toast { left: auto; right: 24px; max-width: 360px; } }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    
+    .world-map-placeholder { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); border-radius: 28px; min-height: 220px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 20px; }
+    @media (min-width: 768px) { .world-map-placeholder { min-height: 280px; } }
+    
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+    @media (min-width: 640px) { .section-label { font-size: 12px; } }
+    
+    @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:0.6} }
+    
+    .hero h1 { font-size: clamp(1.75rem, 8vw, 4rem) !important; line-height: 1.1; word-break: break-word; }
+    .hero p { font-size: clamp(0.875rem, 4vw, 1.125rem) !important; }
+    
+    .container, .max-w-7xl, .max-w-6xl, .max-w-5xl, .mx-auto { width: 100% !important; max-width: 100% !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+    
+    nav .flex { flex-wrap: nowrap !important; gap: 0.5rem !important; }
+    nav .btn-primary { font-size: 0.75rem !important; padding: 0.5rem 0.875rem !important; border-radius: 8px !important; white-space: nowrap; width: auto; }
+    nav .syne { font-size: 1.125rem !important; white-space: nowrap; }
+    @media (min-width: 640px) { 
+      nav .syne { font-size: 1.5rem !important; }
+      nav .btn-primary { font-size: 0.875rem !important; padding: 0.625rem 1.25rem !important; }
+    }
+    
+    .testimonial-img { width: 80px; height: 80px; border-radius: 999px; object-fit: cover; margin: 0 auto; border: 4px solid var(--orange); }
+    
+    @media (max-width: 639px) { .grid-cols-3, .grid-cols-4 { grid-template-columns: 1fr; } }
+
+    /* ==================== CARRUSEL DE BANNERS PREMIUM ==================== */
+    .banner-carousel {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      padding: 60px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .carousel-track {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      gap: 24px;
+      padding: 20px 10px 40px 10px;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .carousel-track::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .carousel-track::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+    }
+
+    .carousel-track::-webkit-scrollbar-thumb {
+      background: var(--orange);
+      border-radius: 10px;
+    }
+
+    .banner-card {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      border-radius: 32px;
+      padding: 40px 32px;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .banner-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 0;
+    }
+
+    .banner-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .banner-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .banner-card:hover::before {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    @media (min-width: 768px) {
+      .banner-card {
+        flex: 0 0 calc(50% - 12px);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .banner-card {
+        flex: 0 0 calc(33.333% - 16px);
+      }
+    }
+
+    .banner-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .banner-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .banner-card p {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .category-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .category-tag {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 40px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: white;
+      transition: all 0.2s;
+    }
+
+    .category-tag:hover {
+      background: var(--orange);
+      border-color: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    .banner-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--orange), #e84a1a);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-top: 20px;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(240, 90, 40, 0.3);
+    }
+
+    .banner-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px rgba(240, 90, 40, 0.4);
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dot.active {
+      background: var(--orange);
+      width: 28px;
+      border-radius: 10px;
+    }
+
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 10;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .nav-arrow:hover {
+      background: var(--orange);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .nav-arrow.prev {
+      left: 10px;
+    }
+
+    .nav-arrow.next {
+      right: 10px;
+    }
+
+    @media (min-width: 768px) {
+      .nav-arrow.prev { left: 20px; }
+      .nav-arrow.next { right: 20px; }
+    }
+
+    /* Modal del formulario Partner */
+    .form-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-modal.open {
+      display: flex;
+    }
+
+    .form-modal-content {
+      background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 32px;
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+    }
+
+    .form-modal-content h3 {
+      color: white;
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .form-modal-content p {
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+
+    .form-modal-content input,
+    .form-modal-content textarea {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 15px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      color: white;
+      font-size: 14px;
+    }
+
+    .form-modal-content input:focus,
+    .form-modal-content textarea:focus {
+      outline: none;
+      border-color: var(--orange);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 28px;
+      color: #888;
+      cursor: pointer;
+    }
+
+    .close-modal:hover {
+      color: var(--orange);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+    <a href="#" class="syne text-xl font-black text-white tracking-tight">RIDE<span style="color:var(--orange)">ALONG</span></a>
+    <div class="hidden md:flex items-center gap-5 text-sm text-gray-300">
+      <a href="#how" class="hover:text-white transition"><span class="lang-es">Cómo funciona</span><span class="lang-en">How it works</span></a>
+      <a href="#explore" class="hover:text-white transition"><span class="lang-es">Explorar</span><span class="lang-en">Explore</span></a>
+      <a href="#hosts" class="hover:text-white transition"><span class="lang-es">Soy Vanlifer</span><span class="lang-en">I'm a Vanlifer</span></a>
+      <a href="#pricing" class="hover:text-white transition"><span class="lang-es">Precios</span><span class="lang-en">Pricing</span></a>
+      <a href="#advertise" class="hover:text-white transition"><span class="lang-es">Publicidad</span><span class="lang-en">Advertise</span></a>
+      <a href="#support" class="hover:text-white transition"><span class="lang-es">Soporte</span><span class="lang-en">Support</span></a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="toggleLang()" class="flex items-center justify-center text-xs font-semibold text-gray-400 hover:text-white transition border border-gray-700 rounded-full w-9 h-9" id="langBtn">EN</button>
+      <button onclick="openModal('login')" class="text-sm text-gray-300 hover:text-white transition hidden sm:block"><span class="lang-es">Entrar</span><span class="lang-en">Log in</span></button>
+      <button onclick="openModal('signup')" class="btn-primary text-sm py-2 px-3 hidden sm:inline-flex"><span class="lang-es">Registrarme</span><span class="lang-en">Sign up</span></button>
+      <button onclick="toggleMobileMenu()" class="md:hidden flex flex-col gap-1.5 p-2">
+        <span class="block w-6 h-0.5 bg-white"></span>
+        <span class="block w-6 h-0.5 bg-white"></span>
+        <span class="block w-6 h-0.5 bg-white"></span>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden bg-black/95 px-4 py-4 flex flex-col gap-3 text-sm text-gray-300">
+    <a href="#how" onclick="closeMobileMenu()" class="py-2">Cómo funciona</a>
+    <a href="#explore" onclick="closeMobileMenu()" class="py-2">Explorar vans</a>
+    <a href="#hosts" onclick="closeMobileMenu()" class="py-2">Soy Vanlifer</a>
+    <a href="#pricing" onclick="closeMobileMenu()" class="py-2">Precios</a>
+    <a href="#advertise" onclick="closeMobileMenu()" class="py-2">Publicidad</a>
+    <a href="#support" onclick="closeMobileMenu()" class="py-2">Soporte</a>
+    <div class="flex gap-2 pt-2">
+      <button onclick="openModal('login'); closeMobileMenu();" class="flex-1 py-2 rounded-xl border border-white/20 text-white">Entrar</button>
+      <button onclick="openModal('signup'); closeMobileMenu();" class="flex-1 py-2 rounded-xl font-bold text-white" style="background:var(--orange)">Registrarme</button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero pt-16">
+  <div class="hero-bg"></div>
+  <div class="hero-gradient"></div>
+  <div class="relative z-10 max-w-7xl mx-auto px-4 py-16 sm:py-24">
+    <div class="max-w-3xl">
+      <div class="badge mb-5" style="background:rgba(240,90,40,0.2); color:#F08060; border:1px solid rgba(240,90,40,0.3);">🌍 <span class="lang-es">+2,400 vans en 38 países</span><span class="lang-en">+2,400 vans in 38 countries</span></div>
+      <h1 class="syne font-black text-white mb-5"><span class="lang-es-block">Encontrá la van perfecta, <span style="color:var(--amber)">en cualquier lugar del mundo</span></span><span class="lang-en-block">Find the perfect van, <span style="color:var(--amber)">anywhere in the world</span></span></h1>
+      <p class="text-gray-300 mb-8 max-w-xl"><span class="lang-es">Rankings reales, reviews de viajeros, match directo con vanlifers. Sin comisiones.</span><span class="lang-en">Real rankings, traveler reviews, direct match with vanlifers. No commissions.</span></p>
+      <div class="search-bar mb-6">
+        <input type="text" id="heroSearch" placeholder="Destino, país, tipo de van..." />
+        <select id="countryFilter">
+          <option value="">País</option>
+          <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
+          <option value="mx">México 🇲🇽</option><option value="co">Colombia 🇨🇴</option>
+          <option value="us">USA 🇺🇸</option><option value="es">España 🇪🇸</option>
+          <option value="nz">New Zealand 🇳🇿</option><option value="au">Australia 🇦🇺</option>
+        </select>
+        <button class="btn-primary" onclick="handleSearch()">Buscar</button>
+      </div>
+      <div class="scroll-x"><div class="flex gap-2">
+        <button class="pill active" onclick="togglePill(this)">🐾 Pet friendly</button>
+        <button class="pill" onclick="togglePill(this)">🛡️ Con seguro</button>
+        <button class="pill" onclick="togglePill(this)">👩 Solo mujeres</button>
+        <button class="pill" onclick="togglePill(this)">⛺ Off-grid</button>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--dark);" class="py-12 px-4">
+  <div class="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+    <div><div class="stat-num text-white" id="stat-vans">...</div><p class="text-gray-400 text-sm mt-2">Vans activas</p></div>
+    <div><div class="stat-num" style="color:var(--orange)" id="stat-countries">...</div><p class="text-gray-400 text-sm mt-2">Países</p></div>
+    <div><div class="stat-num text-white" id="stat-travelers">...</div><p class="text-gray-400 text-sm mt-2">Viajeros</p></div>
+    <div><div class="stat-num" style="color:var(--amber)">$0</div><p class="text-gray-400 text-sm mt-2">Comisión</p></div>
+  </div>
+</section>
+
+<section id="how" class="py-20 px-4" style="background:var(--sand);">
+  <div class="max-w-7xl mx-auto"><div class="section-label text-center">✨ Simple y directo</div>
+  <h2 class="syne text-3xl sm:text-5xl font-black text-center mb-14">¿Cómo funciona?</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="text-center p-6 bg-white rounded-3xl"><div class="text-5xl mb-4">🔍</div><div class="syne text-4xl font-black mb-2" style="color:var(--orange)">01</div><h3 class="syne text-xl font-black mb-3">Buscás tu van</h3><p class="text-gray-500">Filtrás por país, región, características y presupuesto.</p></div>
+    <div class="text-center p-6 rounded-3xl text-white" style="background:var(--dark);"><div class="text-5xl mb-4">💬</div><div class="syne text-4xl font-black mb-2" style="color:var(--amber)">02</div><h3 class="syne text-xl font-black mb-3">Contactás directo</h3><p class="text-gray-400">Sin intermediarios. Con Traveler Plus accedés al WhatsApp del host.</p></div>
+    <div class="text-center p-6 bg-white rounded-3xl"><div class="text-5xl mb-4">🚐</div><div class="syne text-4xl font-black mb-2" style="color:var(--green)">03</div><h3 class="syne text-xl font-black mb-3">¡Viajás!</h3><p class="text-gray-500">El host nunca paga comisión. El precio que ves es lo que pagás.</p></div>
+  </div></div>
+</section>
+
+<section id="explore" class="py-16 px-4 max-w-7xl mx-auto">
+  <div class="section-label">🏆 Rankings semanales</div>
+  <div class="flex justify-between mb-8"><h2 class="syne text-3xl sm:text-5xl font-black">Top vans esta semana</h2><a href="#" class="btn-outline">Ver todos →</a></div>
+  <div class="scroll-x mb-6"><div class="flex gap-2">
+    <button class="pill active" onclick="switchTab(this, 'patagonia')">🏔️ Patagonia</button>
+    <button class="pill" onclick="switchTab(this, 'chile')">🌊 Chile</button>
+    <button class="pill" onclick="switchTab(this, 'mexico')">🌮 México</button>
+    <button class="pill" onclick="switchTab(this, 'newzealand')">🥝 New Zealand</button>
+  </div></div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="vanGrid"><div class="text-center py-12">Cargando vans...</div></div>
+  <div class="text-center mt-8"><button class="btn-outline py-3 px-6" onclick="loadMore()">Cargar más vans</button></div>
+</section>
+
+<section class="py-16 px-4" style="background:var(--dark);">
+  <div class="max-w-7xl mx-auto"><div class="section-label" style="color:var(--amber)">🌍 Cobertura global</div>
+  <h2 class="syne text-3xl sm:text-5xl font-black text-white mb-3">Vans en todos los continentes</h2>
+  <div class="world-map-placeholder"><div class="text-center text-gray-400"><div class="text-5xl mb-3">🗺️</div><p class="text-sm">Mapa interactivo — conectar a Mapbox</p></div>
+  <div style="position:absolute;top:45%;left:28%;width:10px;height:10px;background:var(--orange);border-radius:50%;animation:pulse 2s infinite;"></div></div></div>
+</section>
+
+<section id="pricing" class="py-16 px-4" style="background:var(--sand);">
+  <div class="max-w-7xl mx-auto"><div class="section-label text-center">💰 Planes para viajeros</div>
+  <h2 class="syne text-3xl sm:text-5xl font-black text-center mb-3">Elegí cómo viajar</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+    <div class="plan-card"><div class="text-3xl mb-3">🆓</div><h3 class="syne text-2xl font-black">Free</h3><div class="text-4xl font-black my-4">$0<span class="text-base">/mes</span></div><ul class="space-y-2 mb-6 text-sm"><li>✓ Rankings completos</li><li>✓ Ver 3 hosts/día</li></ul><button onclick="openModal('signup')" class="w-full py-3 rounded-full border border-gray-300">Empezar gratis</button></div>
+    <div class="plan-card plan-popular relative"><div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-xs px-4 py-1.5 rounded-full">⭐ MÁS ELEGIDO</div><div class="text-3xl mb-3">🚐</div><h3 class="syne text-2xl font-black text-white">Traveler Plus</h3><div class="text-4xl font-black my-4 text-white">$9<span class="text-base">/mes</span></div><ul class="space-y-2 mb-6 text-sm text-gray-300"><li>✓ Sin publicidad</li><li>✓ WhatsApp directo</li><li>✓ Filtros avanzados</li></ul><button onclick="openPayment('traveler_plus')" class="w-full py-3 rounded-full font-bold text-white" style="background:var(--orange)">Suscribirme por $9</button></div>
+    <div class="plan-card"><div class="text-3xl mb-3">🛡️</div><h3 class="syne text-2xl font-black" style="color:var(--green)">Trust Pass</h3><div class="text-4xl font-black my-4" style="color:var(--green)">$15<span class="text-base">/match</span></div><ul class="space-y-2 mb-6 text-sm"><li>✓ Video-call grabada</li><li>✓ Botón pánico GPS</li><li>✓ $50 crédito si cancela</li></ul><button onclick="openPayment('trust_pass')" class="w-full py-3 rounded-full font-bold text-white" style="background:var(--green)">Activar por $15</button></div>
+  </div>
+  <div class="mt-10 max-w-5xl mx-auto"><div class="plan-card relative mt-4" style="border:2px solid var(--orange);"><div class="absolute -top-3 left-6 bg-orange-500 text-white text-xs px-4 py-1.5 rounded-full">🏆 HOST PRO</div><div class="flex flex-col md:flex-row justify-between gap-6 pt-4"><div><h3 class="syne text-2xl font-black">Publicá tu van, conseguí clientes</h3><p class="text-gray-500 text-sm mb-4">Sin comisión. Aparecés primero en tu zona.</p><div class="flex flex-wrap gap-3 text-sm"><span>✓ Perfil verificado + badge</span><span>✓ Primero en rankings</span><span>✓ Fotos ilimitadas</span></div></div><div><div class="text-4xl font-black" style="color:var(--orange)">$20<span class="text-base">/mes</span></div><button onclick="openPayment('host_pro')" class="btn-primary mt-3">Publicar mi van</button></div></div></div></div></div>
+</section>
+
+<section id="hosts" class="py-16 px-4" style="background:var(--dark);">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <div><div class="badge mb-4" style="background:rgba(26,138,90,0.2); color:#4ADE80;">🚐 ¿Tenés una van?</div><h2 class="syne text-3xl sm:text-5xl font-black text-white mb-5">Conseguí clientes <span style="color:var(--orange)">sin comisión</span></h2><ul class="space-y-3 mb-6"><li class="flex gap-2 text-gray-300"><span class="text-green-400 text-xl">✓</span><span>Perfil gratis en 2 minutos</span></li><li class="flex gap-2 text-gray-300"><span class="text-green-400 text-xl">✓</span><span>Sin comisión, recibí consultas directas</span></li></ul><button onclick="openModal('host-signup')" class="btn-primary">Crear perfil gratis</button></div>
+    <div><img src="https://res.cloudinary.com/ds2udm1nc/image/upload/v1781063007/img5_kiceeq.png" alt="Vanlifer" class="rounded-2xl shadow-2xl w-full"><div class="mt-4 grid grid-cols-3 gap-3"><div class="rounded-xl p-4 text-center bg-white/5"><p class="text-2xl font-black text-white">15</p><p class="text-xs text-gray-400">Consultas/mes</p></div><div class="rounded-xl p-4 text-center bg-orange-500/20"><p class="text-2xl font-black" style="color:var(--orange)">$0</p><p class="text-xs text-gray-400">Comisión</p></div><div class="rounded-xl p-4 text-center bg-white/5"><p class="text-2xl font-black text-white">#1</p><p class="text-xs text-gray-400">En tu zona</p></div></div></div>
+  </div>
+</section>
+
+<section class="py-16 px-4" style="background:var(--sand);">
+  <div class="max-w-3xl mx-auto text-center"><img src="https://res.cloudinary.com/ds2udm1nc/image/upload/v1781063009/img8_uh6slq.png" class="testimonial-img"><blockquote class="syne text-2xl sm:text-3xl font-bold text-gray-800 my-5">"15 consultas el primer mes sin pagar publicidad. El badge Pro me puso primera en Bariloche."</blockquote><p class="font-bold">Meli R.</p><p class="text-sm" style="color:var(--orange)">Host Pro · Bariloche, Argentina</p></div>
+</section>
+
+<section class="py-16 px-4" style="background:var(--dark);">
+  <div class="max-w-3xl mx-auto text-center"><div class="section-label" style="color:var(--amber)">🔥 Tendencias</div><h2 class="syne text-3xl sm:text-5xl font-black text-white mb-4">No te pierdas nada</h2><div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"><input type="email" id="newsletterEmail" class="form-input flex-1 rounded-full" placeholder="tu@email.com"><button onclick="subscribeNewsletter()" class="btn-primary rounded-full px-6">Recibir alertas</button></div></div>
+</section>
+
+<!-- ==================== CARRUSEL DE BANNERS PREMIUM (con imagen de fondo en cada banner) ==================== -->
+<section id="advertise" class="banner-carousel">
+  <div class="carousel-container">
+    <div class="nav-arrow prev" onclick="prevSlide()">←</div>
+    <div class="nav-arrow next" onclick="nextSlide()">→</div>
+    
+    <div class="carousel-track" id="carouselTrack">
+      
+      <!-- BANNER 1 - Publicidad & Sponsorships -->
+      <div class="banner-card" style="background-image: url('https://res.cloudinary.com/ds2udm1nc/image/upload/v1781263274/Copilot_20260612_081031_okddhr.png');">
+        <div class="banner-icon">📢</div>
+        <h3 class="banner-title">Publicidad & Sponsorships</h3>
+        <p>Llevá tu marca frente a miles de viajeros y vanlifers en todo el mundo.</p>
+        <div class="category-grid">
+          <span class="category-tag">🏆 Banners destacados</span>
+          <span class="category-tag">🚀 Campañas patrocinadas</span>
+          <span class="category-tag">🌍 Presencia global</span>
+          <span class="category-tag">🎯 Audiencia segmentada</span>
+        </div>
+        <button class="banner-btn" onclick="openPartnerForm('Publicidad & Sponsorships')">Ser partner →</button>
+      </div>
+
+      <!-- BANNER 2 - Partnerships Estratégicos -->
+      <div class="banner-card" style="background-image: url('https://res.cloudinary.com/ds2udm1nc/image/upload/v1781263274/Copilot_20260612_081031_okddhr.png');">
+        <div class="banner-icon">🤝</div>
+        <h3 class="banner-title">Partnerships Estratégicos</h3>
+        <p>Colaborá con la comunidad vanlife más internacional.</p>
+        <div class="category-grid">
+          <span class="category-tag">🔗 Integraciones de marca</span>
+          <span class="category-tag">✨ Beneficios exclusivos</span>
+          <span class="category-tag">📢 Co-marketing</span>
+          <span class="category-tag">🎪 Activaciones especiales</span>
+        </div>
+        <button class="banner-btn" onclick="openPartnerForm('Partnerships Estratégicos')">Ser partner →</button>
+      </div>
+
+      <!-- BANNER 3 - Alcance Global -->
+      <div class="banner-card" style="background-image: url('https://res.cloudinary.com/ds2udm1nc/image/upload/v1781263274/Copilot_20260612_081031_okddhr.png');">
+        <div class="banner-icon">🌍</div>
+        <h3 class="banner-title">Alcance Global</h3>
+        <p>Conectá con viajeros de América, Europa y Oceanía.</p>
+        <div class="category-grid">
+          <span class="category-tag">🚐 +2.400 vans</span>
+          <span class="category-tag">🌎 38 países</span>
+          <span class="category-tag">✈️ Audiencia internacional</span>
+          <span class="category-tag">📈 Crecimiento constante</span>
+        </div>
+        <button class="banner-btn" onclick="openPartnerForm('Alcance Global')">Ser partner →</button>
+      </div>
+
+      <!-- BANNER 4 - Rubros & Industrias -->
+      <div class="banner-card" style="background-image: url('https://res.cloudinary.com/ds2udm1nc/image/upload/v1781263274/Copilot_20260612_081031_okddhr.png');">
+        <div class="banner-icon">🏭</div>
+        <h3 class="banner-title">Rubros & Industrias</h3>
+        <p>Segmentos clave para tu marca en el mundo vanlife.</p>
+        <div class="category-grid">
+          <span class="category-tag">🚐 Fabricantes de Vans</span>
+          <span class="category-tag">🛡️ Seguros de Viaje</span>
+          <span class="category-tag">⛺ Equipamiento Outdoor</span>
+          <span class="category-tag">👕 Ropa Técnica</span>
+          <span class="category-tag">📡 Conectividad Satelital</span>
+          <span class="category-tag">🗺️ Apps de Navegación</span>
+          <span class="category-tag">🏕️ Campings & Glampings</span>
+          <span class="category-tag">☀️ Energía Solar</span>
+          <span class="category-tag">💳 Fintech para Viajeros</span>
+          <span class="category-tag">🌎 Turismo y Destinos</span>
+        </div>
+        <button class="banner-btn" onclick="openPartnerForm('Rubros & Industrias')">Ser partner →</button>
+      </div>
+    </div>
+    
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+</section>
+
+<!-- Modal Formulario Partner -->
+<div id="partnerModal" class="form-modal">
+  <div class="form-modal-content">
+    <span class="close-modal" onclick="closePartnerForm()">&times;</span>
+    <h3>🤝 Quiero ser partner</h3>
+    <p>Completá el formulario y te contactamos</p>
+    <input type="text" id="partnerName" placeholder="Nombre / Empresa">
+    <input type="email" id="partnerEmail" placeholder="Email">
+    <input type="text" id="partnerBanner" placeholder="Rubro" readonly style="background:rgba(240,90,40,0.15); border-color:var(--orange);">
+    <textarea id="partnerMessage" rows="3" placeholder="Contanos sobre tu marca..."></textarea>
+    <button class="banner-btn" onclick="sendPartnerEmail()" style="width:100%;">Enviar consulta →</button>
+  </div>
+</div>
+
+<section id="support" class="py-20 px-4" style="background:var(--sand);">
+  <div class="max-w-4xl mx-auto"><div class="section-label text-center">💬 Ayuda</div><h2 class="syne text-3xl sm:text-5xl font-black text-center mb-12">Soporte</h2>
+  <div class="space-y-4 mb-12">
+    <details class="bg-white rounded-2xl p-5"><summary class="font-bold">¿RIDEALONG opera los viajes?</summary><p class="text-gray-500 text-sm mt-3">No. Somos una red informativa. Los hosts son independientes.</p></details>
+    <details class="bg-white rounded-2xl p-5"><summary class="font-bold">¿En qué países está disponible?</summary><p class="text-gray-500 text-sm mt-3">En todo el mundo. Cualquier vanlifer puede publicar su van gratis.</p></details>
+    <details class="bg-white rounded-2xl p-5"><summary class="font-bold">¿Cómo cancelo mi suscripción?</summary><p class="text-gray-500 text-sm mt-3">Escribinos a ridealong61@yahoo.com</p></details>
+  </div>
+  <div class="text-center bg-white rounded-3xl p-8"><div class="text-4xl mb-3">📬</div><h3 class="syne text-2xl font-black mb-2">¿Necesitás ayuda?</h3><a href="mailto:ridealong61@yahoo.com" class="btn-primary inline-flex">✉️ ridealong61@yahoo.com</a></div></div>
+</section>
+
+<footer style="background:#0A0A0A;" class="pt-12 pb-6 px-4"><div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+  <div><p class="syne text-xl font-black mb-2">RIDE<span style="color:var(--orange)">ALONG</span></p><p class="text-gray-500 text-xs">© 2026 · Global vanlife community</p><a href="mailto:ridealong61@yahoo.com" class="text-xs text-orange-400">ridealong61@yahoo.com</a></div>
+  <div><p class="font-bold mb-3 text-sm text-[var(--orange)]">Viajeros</p><ul class="space-y-2 text-xs text-gray-500"><li><a href="#explore">Rankings</a></li><li><a href="#pricing">Traveler Plus</a></li></ul></div>
+  <div><p class="font-bold mb-3 text-sm text-[var(--orange)]">Hosts</p><ul class="space-y-2 text-xs text-gray-500"><li><a href="#hosts">Publicar van</a></li><li><a href="#pricing">Host Pro</a></li></ul></div>
+  <div><p class="font-bold mb-3 text-sm text-[var(--orange)]">Ayuda</p><ul class="space-y-2 text-xs text-gray-500"><li><a href="#support">FAQ</a></li><li><a href="mailto:ridealong61@yahoo.com">Soporte</a></li></ul></div>
+</div><div class="border-t border-white/10 pt-6 text-center text-xs text-gray-600"><p>💳 Pagos seguros vía PayPal · Lemon Cash</p><p>RIDEALONG red informativa. Hosts independientes.</p></div></footer>
+
+<!-- MODALES -->
+<div class="modal-overlay" id="modal-signup"><div class="modal"><button onclick="closeModal('signup')" class="absolute top-4 right-4 text-2xl">✕</button><h2 class="syne text-2xl font-black">Crear cuenta gratis</h2><div class="space-y-4 mt-5"><input type="text" id="signup-name" class="form-input" placeholder="Nombre"><input type="email" id="signup-email" class="form-input" placeholder="Email"><input type="password" id="signup-pass" class="form-input" placeholder="Contraseña"><button onclick="handleSignup()" class="btn-primary w-full">Registrarme</button></div></div></div>
+<div class="modal-overlay" id="modal-login"><div class="modal"><button onclick="closeModal('login')" class="absolute top-4 right-4 text-2xl">✕</button><h2 class="syne text-2xl font-black">Bienvenido</h2><div class="space-y-4 mt-5"><input type="email" id="login-email" class="form-input" placeholder="Email"><input type="password" id="login-pass" class="form-input" placeholder="Contraseña"><button onclick="handleLogin()" class="btn-primary w-full">Entrar</button></div></div></div>
+<div class="modal-overlay" id="modal-host-signup"><div class="modal"><button onclick="closeModal('host-signup')" class="absolute top-4 right-4 text-2xl">✕</button><h2 class="syne text-2xl font-black">Publicar mi van</h2><div class="space-y-3"><input type="text" id="host-name" class="form-input" placeholder="Nombre de tu van"><input type="email" id="host-email" class="form-input" placeholder="Email"><select id="host-country" class="form-input"><option value="">País</option><option value="ar">Argentina</option><option value="cl">Chile</option><option value="mx">México</option></select><input type="text" id="host-city" class="form-input" placeholder="Ciudad"><input type="tel" id="host-whatsapp" class="form-input" placeholder="WhatsApp"><input type="number" id="host-price" class="form-input" placeholder="Precio por día USD"><textarea id="host-desc" class="form-input" rows="3" placeholder="Descripción"></textarea><button onclick="handleHostSignup()" class="btn-primary w-full">Crear perfil gratis</button></div></div></div>
+<div class="modal-overlay" id="modal-van-detail"><div class="modal"><button onclick="closeModal('van-detail')" class="absolute top-4 right-4 text-2xl">✕</button><div id="vanDetailContent"></div></div></div>
+<div class="toast" id="toast"></div>
+<div class="modal-overlay" id="modal-paypal"><div class="modal"><button onclick="closeModal('paypal')" class="absolute top-4 right-4 text-2xl">✕</button><div id="paypalPlanInfo"></div><div id="paypal-button-container"></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AT7rIcbFTBG7EvjALkKj6wTtTQ2sTiLoG-FVr1AaA68iaYeeyXneXEkh5orCDPYic_csGfabXSAnLEQH&currency=USD"></script>
+<script>
+  const SUPABASE_URL = 'https://ezjomcqgztccpkdsasvv.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6am9tY3FnenRjY3BrZHNhc3Z2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMzM5MzEsImV4cCI6MjA5NjcwOTkzMX0.obTrBUaraj3kquVYGyl-P9Oz7Rpkb2az0dQvQ6poGcY';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let currentUser = null;
+  let currentPage = 0;
+  let activeDestination = 'patagonia';
+  const PLANS = { traveler_plus: { name: 'Traveler Plus' }, trust_pass: { name: 'Trust Pass' }, host_pro: { name: 'Host Pro' } };
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) currentUser = session.user;
+    sb.auth.onAuthStateChange((_e, session) => { currentUser = session?.user || null; });
+    await loadVans();
+    loadStats();
+    initCarousel();
+  });
+
+  function toggleLang() {
+    const h = document.documentElement;
+    const l = h.getAttribute('data-lang') === 'es' ? 'en' : 'es';
+    h.setAttribute('data-lang', l);
+    document.getElementById('langBtn').textContent = l === 'es' ? 'EN' : 'ES';
+  }
+  function openModal(id) { document.getElementById('modal-' + id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeModal(id) { const m = document.getElementById('modal-' + id); if(m){ m.classList.remove('open'); document.body.style.overflow = ''; } }
+  function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800); }
+  function togglePill(el) { el.classList.toggle('active'); }
+  function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
+  function closeMobileMenu() { document.getElementById('mobileMenu').classList.add('hidden'); }
+
+  async function handleSignup() {
+    const email = document.getElementById('signup-email').value.trim();
+    const pass = document.getElementById('signup-pass').value;
+    if(!email || !pass) return showToast('❌ Completá campos');
+    const { error } = await sb.auth.signUp({ email, password: pass });
+    if(error) return showToast('❌ ' + error.message);
+    showToast('✅ Cuenta creada'); closeModal('signup');
+  }
+  async function handleLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if(error) return showToast('❌ Email o contraseña incorrectos');
+    showToast('✅ Bienvenido'); closeModal('login');
+  }
+  async function handleHostSignup() { showToast('🚐 Perfil creado (demo)'); closeModal('host-signup'); await loadVans(); }
+  async function loadVans() {
+    const grid = document.getElementById('vanGrid');
+    grid.innerHTML = '<div class="col-span-3 text-center py-12">Cargando...</div>';
+    const { data, error } = await sb.from('hosts').select('*, host_photos(url, is_cover)').eq('is_active', true).limit(6);
+    if(error) { grid.innerHTML = '<div class="col-span-3 text-center py-12">Error</div>'; return; }
+    if(!data || data.length === 0) { grid.innerHTML = '<div class="col-span-3 text-center py-12">🔍 No hay vans</div>'; return; }
+    grid.innerHTML = data.map((host, i) => {
+      const cover = host.host_photos?.find(p => p.is_cover)?.url || host.host_photos?.[0]?.url || 'https://res.cloudinary.com/ds2udm1nc/image/upload/v1781063007/img4_y0bjie.png';
+      return `<div class="van-card" onclick="openVanModal('${host.id}')"><div class="relative"><img src="${cover}" class="w-full h-48 object-cover"><div class="absolute top-3 left-3"><span class="badge" style="background:var(--orange);color:white">#${i+1}</span></div></div><div class="p-4"><h3 class="font-bold">${host.van_name}</h3><p class="text-sm text-gray-500">${host.city || ''}</p><div class="flex justify-between items-center mt-2"><span class="font-bold text-xl" style="color:var(--orange)">$${host.price_per_day || '?'}<span class="text-sm">/día</span></span><button class="btn-primary text-sm py-1 px-3">Contactar</button></div></div></div>`;
+    }).join('');
+  }
+  async function openVanModal(hostId) { openModal('van-detail'); document.getElementById('vanDetailContent').innerHTML = '<p>Cargando...</p>'; const { data } = await sb.from('hosts').select('*').eq('id', hostId).single(); if(data) document.getElementById('vanDetailContent').innerHTML = `<h2>${data.van_name}</h2><p>${data.description || 'Sin descripción'}</p><button class="btn-primary mt-3" onclick="showToast('Contacto disponible con Traveler Plus')">Contactar</button>`; }
+  async function handleSearch() { await loadVans(); }
+  async function loadMore() { await loadVans(); }
+  async function switchTab(el, dest) { document.querySelectorAll('.pill').forEach(p => p.classList.remove('active')); el.classList.add('active'); activeDestination = dest; await loadVans(); }
+  async function subscribeNewsletter() { const email = document.getElementById('newsletterEmail').value.trim(); if(!email) return showToast('❌ Ingresá email'); showToast('🔔 Suscripto!'); }
+  function openPayment(plan) { showToast('🔒 Pago con PayPal (demo)'); }
+  async function loadStats() { try { const { count: vans } = await sb.from('hosts').select('*', { count: 'exact', head: true }); document.getElementById('stat-vans').textContent = (vans || 0) + '+'; document.getElementById('stat-countries').textContent = '30+'; document.getElementById('stat-travelers').textContent = '1,200+'; } catch(e) { console.log(e); } }
+
+  // Carrusel
+  let currentIndex = 0;
+  let autoInterval;
+  const track = document.getElementById('carouselTrack');
+  function updateDots() { document.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('active', i===currentIndex)); }
+  function goToSlide(index) { const slides = track.children; if(index >= slides.length) currentIndex = 0; if(index < 0) currentIndex = slides.length-1; const slideWidth = slides[currentIndex]?.offsetWidth || 0; track.scrollTo({ left: slideWidth * currentIndex, behavior: 'smooth' }); updateDots(); }
+  function nextSlide() { currentIndex++; goToSlide(currentIndex); resetAuto(); }
+  function prevSlide() { currentIndex--; goToSlide(currentIndex); resetAuto(); }
+  function resetAuto() { if(autoInterval) clearInterval(autoInterval); autoInterval = setInterval(() => { currentIndex++; goToSlide(currentIndex); }, 5000); }
+  function initCarousel() { const dotsContainer = document.getElementById('carouselDots'); for(let i=0; i<track.children.length; i++){ const dot = document.createElement('div'); dot.classList.add('dot'); if(i===0) dot.classList.add('active'); dot.onclick = () => { currentIndex = i; goToSlide(i); resetAuto(); }; dotsContainer.appendChild(dot); } resetAuto(); track.addEventListener('scroll', () => { const newIndex = Math.round(track.scrollLeft / (track.children[0]?.offsetWidth || 1)); if(newIndex !== currentIndex){ currentIndex = newIndex; updateDots(); } }); track.addEventListener('mouseenter', () => clearInterval(autoInterval)); track.addEventListener('mouseleave', resetAuto); }
+
+  // Partner Form
+  function openPartnerForm(banner) { document.getElementById('partnerBanner').value = banner; document.getElementById('partnerModal').classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closePartnerForm() { document.getElementById('partnerModal').classList.remove('open'); document.body.style.overflow = ''; }
+  function sendPartnerEmail() {
+    const name = document.getElementById('partnerName').value.trim();
+    const email = document.getElementById('partnerEmail').value.trim();
+    const banner = document.getElementById('partnerBanner').value;
+    const message = document.getElementById('partnerMessage').value.trim();
+    if(!name || !email) return alert('❌ Completá nombre y email');
+    const subject = encodeURIComponent(`[RIDEALONG Partner] ${name} - ${banner}`);
+    const body = encodeURIComponent(`Nombre: ${name}\nEmail: ${email}\nRubro: ${banner}\nMensaje: ${message}`);
+    window.location.href = `mailto:ridealong61@yahoo.com?subject=${subject}&body=${body}`;
+    alert('📨 Consulta enviada a ridealong61@yahoo.com');
+    closePartnerForm();
+  }
+  document.getElementById('partnerModal')?.addEventListener('click', (e) => { if(e.target === document.getElementById('partnerModal')) closePartnerForm(); });
+</script>
+</body>
+</html>
